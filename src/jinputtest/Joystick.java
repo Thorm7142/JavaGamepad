@@ -111,7 +111,7 @@ Joystick_Controller.poll();
                 System.out.println(buffer.toString());
                 
 
-                
+                mainwin.Upd(Joystick_Controller, event);
 
             }
             
