@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package jinputtest;
+package NetworkPackage;
 
 import gnu.io.CommPort;
 import gnu.io.CommPortIdentifier;
@@ -20,14 +20,14 @@ import java.io.PrintWriter;
  * @author alexa
  */
 public class NetworkUtilities {
-        int rate = 19200;
-    OutputStream out; 
+    public int rate = 19200;
+    public OutputStream out; 
     
     public NetworkUtilities() {
         super();
     }
 
-    void connect(String portName) throws Exception {
+    public void connect(String portName) throws Exception {
         CommPortIdentifier portIdentifier = CommPortIdentifier.getPortIdentifier(portName);
         if (portIdentifier.isCurrentlyOwned()) {
             System.out.println("Error: Port is currently in use");
@@ -39,7 +39,10 @@ public class NetworkUtilities {
                 serialPort.setSerialPortParams(rate, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
 
                 InputStream in = serialPort.getInputStream();
-                out = serialPort.getOutputStream();
+                if((out = serialPort.getOutputStream()) == null)
+                {
+                    System.out.println("C NUL");
+                }
 
                 (new Thread(new SerialReader(in))).start();
                 (new Thread(new SerialWriter(out))).start();

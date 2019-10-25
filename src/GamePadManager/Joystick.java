@@ -3,7 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package jinputtest;
+package GamePadManager;
+
+import Window.*;
 
 /**
  *
@@ -21,7 +23,7 @@ public class Joystick extends Thread
 
     private float[]       Joystick_oldpoll  = new float[20];
     
-    private mw mainwin;
+    private Window.mw mainwin;
 
     public Joystick()
     {
@@ -29,7 +31,7 @@ public class Joystick extends Thread
         
     }
     
-    public Joystick(mw mainwindow)
+    public Joystick(Window.mw mainwindow)
     {
         processfindJoystick();
         mainwin = mainwindow;
@@ -40,7 +42,7 @@ public class Joystick extends Thread
     {
         this.Joystick_Controller = null;
 
-        // poll a list of present controllers.
+        // Liste des manettes
         Controller[] tempList = ControllerEnvironment.getDefaultEnvironment()
                 .getControllers();
 
@@ -51,14 +53,14 @@ public class Joystick extends Thread
                 return;
             }
 
-        System.out.println("No joystick found.");
+        System.out.println("Pas de manette");
     }
 
     public void setJoystick(Controller newJoy)
     {
                 this.Joystick_Controller = newJoy;
 
-                System.out.println("Active Joystick set to: "
+                System.out.println("Manette active : "
                         + this.Joystick_Controller.getName());               
     }
 
@@ -83,7 +85,7 @@ public class Joystick extends Thread
             Event event = new Event();
 
             while(queue.getNextEvent(event)) {
-                StringBuffer buffer = new StringBuffer(Joystick_Controller.getName());
+                /*StringBuffer buffer = new StringBuffer(Joystick_Controller.getName());
                 
                 buffer.append(" at ");
                 buffer.append(event.getNanos()).append(", ");
@@ -108,7 +110,7 @@ public class Joystick extends Thread
                 }
                 buffer.append(" Identifier = " + comp.getIdentifier());
                 
-                System.out.println(buffer.toString());
+                System.out.println(buffer.toString());*/
                 
 
                 mainwin.Upd(Joystick_Controller, event);

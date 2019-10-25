@@ -3,9 +3,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package jinputtest;
+package Window;
 
+import NetworkPackage.*;
+import GamePadManager.*;
+
+import gnu.io.CommPortIdentifier;
+import gnu.io.SerialPort;
 import java.awt.Color;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Enumeration;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JSlider;
 import net.java.games.input.Controller;
@@ -19,11 +29,37 @@ public class mw extends javax.swing.JFrame {
 
     Joystick joystick = null;
     
+    OutputStream out;
+    CommPortIdentifier portId;
+    SerialPort serialPort;
+    NetworkPackage.NetworkUtilities nu = new NetworkPackage.NetworkUtilities(); 
+    NetworkPackage.BioloidFcts bf = null;
+    
     /**
      * Creates new form mw
      */
     public mw() {
+        
         initComponents();
+        
+        listePortsDispo();
+        
+        String rate = "57600";
+
+        if (rate != null && !rate.trim().equals("")) {
+            try {
+                nu.rate = Integer.parseInt(rate);
+            } catch (NumberFormatException nfe) {
+                System.out.println("BAUDRATE n'est pas un nombre");
+            }
+        }
+        try {
+            nu.connect("COM10");
+        } catch (Exception e) {
+            System.out.println("EXCEPTION DE CONNECTION : " + e.getMessage());
+        }
+        
+        bf = new NetworkPackage.BioloidFcts(nu);
         
         joystick = new Joystick(this);
         joystick.start();
@@ -94,6 +130,20 @@ public class mw extends javax.swing.JFrame {
         }
     }
     
+    public void listePortsDispo() {
+        System.out.println("Recherche de Ports"); 
+        Enumeration portList = CommPortIdentifier.getPortIdentifiers();
+        if (portList == null) {
+            System.out.println("Aucun port de communication détecté");
+        }
+        else {
+            while (portList.hasMoreElements()) {
+                portId = (CommPortIdentifier) portList.nextElement();
+                System.out.println("* " + portId.getName());
+            } 
+        }
+    } 
+    
     public void UpdSlider(JSlider jsl, float val)
     {
         jsl.setValue((int)(val*100));
@@ -104,16 +154,34 @@ public class mw extends javax.swing.JFrame {
         jsl.setValue((int)-(val*100));
     }
     
+    public void Send(int val)
+    {
+        try {
+            nu.out.write(val);
+        } catch (IOException ex) {
+            Logger.getLogger(mw.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     public void Upd(Controller c, Event e)
     {
         
         switch(String.valueOf(e.getComponent().getIdentifier()))
         {
             case "0" :     setColorBool(e, jl_carre);
-                           
                         break;
                         
             case "1" :     setColorBool(e, jl_croix);
+                            if(e.getValue() == 1.0f)
+                            {
+                                System.out.println("Avancer");
+                                bf.Avancer();
+                            }
+                            else
+                            {
+                                System.out.println("Arret");
+                                bf.Arret();
+                            }
                         break;
                         
             case "2" :     setColorBool(e, jl_rond);
@@ -123,18 +191,60 @@ public class mw extends javax.swing.JFrame {
                         break;
                         
             case "4" :     setColorBool(e, jl_l1);
+                            if(e.getValue() == 1.0f)
+                            {
+                                System.out.println("PinceDown");
+                                bf.PinceDown();
+                            }
+                            else
+                            {
+                                System.out.println("PinceStop");
+                                bf.PinceStop();
+                            }
                         break;
                         
             case "5" :     setColorBool(e, jl_r1);
+                            if(e.getValue() == 1.0f)
+                            {
+                                System.out.println("PinceUp");
+                                bf.PinceUp();
+                            }
+                            else
+                            {
+                                System.out.println("PinceStop");
+                                bf.PinceStop();
+                            }
                         break;
                         
             case "6" :     setColorBool(e, jl_l2);
+                            if(e.getValue() == 1.0f)
+                            {
+                                System.out.println("PinceOpen");
+                                bf.PinceOpen();
+                            }
+                            else
+                            {
+                                System.out.println("PinceStop");
+                                bf.PinceStop();
+                            }
                         break;
                         
             case "7" :     setColorBool(e, jl_r2);
+                            if(e.getValue() == 1.0f)
+                            {
+                                System.out.println("PinceClose");
+                                bf.PinceClose();
+                            }
+                            else
+                            {
+                                System.out.println("PinceStop");
+                                bf.PinceStop();
+                            }
                         break;
                         
             case "8" :     setColorBool(e, jl_select);
+                            setColorBool(e, jl_r2);
+
                         break;
                         
             case "9" :     setColorBool(e, jl_start);
@@ -144,6 +254,16 @@ public class mw extends javax.swing.JFrame {
                         break;
                         
             case "11" :    setColorBool(e, jl_r3);
+                            if(e.getValue() == 1.0f)
+                            {
+                                System.out.println("Klaxon");
+                                bf.Klaxon();
+                            }
+                            else
+                            {
+                                System.out.println("PaxKlaxon ?");
+
+                            }
                         break;
                         
             case "12" :    setColorBool(e, jl_home);
@@ -401,8 +521,8 @@ public class mw extends javax.swing.JFrame {
                         .addComponent(jl_r3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jl_zd, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(8, 8, 8)
-                        .addComponent(jsl, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jsl, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(1, 1, 1))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
