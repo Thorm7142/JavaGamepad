@@ -76,7 +76,7 @@ public class Joystick extends Thread
     {
         while(true)
         {
-Joystick_Controller.poll();
+            Joystick_Controller.poll();
             
             EventQueue queue = Joystick_Controller.getEventQueue();
 
