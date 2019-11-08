@@ -163,6 +163,25 @@ public class mw extends javax.swing.JFrame {
         }
     }
     
+    public void setMvtOx(float val)
+    {
+        
+        if(val> 0) // droite
+        {
+            val = val*2000;
+            bf.Droite(val);
+        }
+        else if(val < -0.01) // gauche
+        {
+            val = val*(-1000);
+            bf.Gauche(val);
+        }
+        else
+        {
+            bf.Arret();
+        }
+    }
+    
     public void Upd(Controller c, Event e)
     {
         
@@ -185,6 +204,16 @@ public class mw extends javax.swing.JFrame {
                         break;
                         
             case "2" :     setColorBool(e, jl_rond);
+                            if(e.getValue() == 1.0f)
+                            {
+                                System.out.println("Reculer");
+                                bf.Reculer();
+                            }
+                            else
+                            {
+                                System.out.println("Arret");
+                                bf.Arret();
+                            }
                         break;
                         
             case "3" :     setColorBool(e, jl_triangle);
@@ -203,7 +232,7 @@ public class mw extends javax.swing.JFrame {
                             }
                         break;
                         
-            case "5" :     setColorBool(e, jl_r1);
+            case "5" :      setColorBool(e, jl_r1);
                             if(e.getValue() == 1.0f)
                             {
                                 System.out.println("PinceUp");
@@ -243,7 +272,7 @@ public class mw extends javax.swing.JFrame {
                         break;
                         
             case "8" :     setColorBool(e, jl_select);
-                            setColorBool(e, jl_r2);
+                           setColorBool(e, jl_r2);
 
                         break;
                         
@@ -261,7 +290,7 @@ public class mw extends javax.swing.JFrame {
                             }
                             else
                             {
-                                System.out.println("PaxKlaxon ?");
+                                System.out.println("PaxKlaxon");
 
                             }
                         break;
@@ -281,6 +310,7 @@ public class mw extends javax.swing.JFrame {
                         break;
                         
             case "x" :      setColorJoy(e, jl_x_d, jl_x_g);
+                            setMvtOx(e.getValue());
                             UpdSlider(jslx, e.getValue());
                         break;
                         

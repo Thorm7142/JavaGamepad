@@ -41,7 +41,7 @@ public class NetworkUtilities {
                 InputStream in = serialPort.getInputStream();
                 if((out = serialPort.getOutputStream()) == null)
                 {
-                    System.out.println("C NUL");
+                    System.out.println("Erreur");
                 }
 
                 (new Thread(new SerialReader(in))).start();

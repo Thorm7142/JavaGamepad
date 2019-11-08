@@ -84,37 +84,9 @@ public class Joystick extends Thread
 
             Event event = new Event();
 
-            while(queue.getNextEvent(event)) {
-                /*StringBuffer buffer = new StringBuffer(Joystick_Controller.getName());
-                
-                buffer.append(" at ");
-                buffer.append(event.getNanos()).append(", ");
-                
-                Component comp = event.getComponent();
-                buffer.append(comp.getName()).append(" changed to ");
-                float value = event.getValue(); 
-                
-                if(comp.isAnalog()) 
-                {
-                   buffer.append(value);
-                } 
-                else 
-                {
-                   if(value==1.0f) {
-                      buffer.append("On");
-                   } 
-                   else 
-                   {
-                      buffer.append("Off");
-                   }
-                }
-                buffer.append(" Identifier = " + comp.getIdentifier());
-                
-                System.out.println(buffer.toString());*/
-                
-
+            while(queue.getNextEvent(event)) 
+            {                
                 mainwin.Upd(Joystick_Controller, event);
-
             }
             
             try 
@@ -123,12 +95,9 @@ public class Joystick extends Thread
             } 
             catch (InterruptedException e) 
             {
-
                e.printStackTrace();
             } 
-        }
-            
-        
+        }                 
     }
     
 }
