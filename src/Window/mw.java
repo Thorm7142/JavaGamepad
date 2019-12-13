@@ -1,4 +1,5 @@
-/*
+
+  /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -21,7 +22,8 @@ import javax.swing.JSlider;
 import net.java.games.input.Controller;
 import net.java.games.input.Event;
 
-/**
+/*
+ *
  *
  * @author alexa
  */
@@ -43,7 +45,7 @@ public class mw extends javax.swing.JFrame {
         initComponents();
         
         listePortsDispo();
-        
+         
         String rate = "57600";
 
         if (rate != null && !rate.trim().equals("")) {
